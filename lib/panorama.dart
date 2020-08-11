@@ -32,6 +32,7 @@ class Panorama extends StatefulWidget {
     this.interactive = true,
     this.sensorControl = SensorControl.None,
     this.onChangedCallback,
+    this.onLoadFinishedCallback,
     this.child,
   }) : super(key: key);
 
@@ -85,6 +86,9 @@ class Panorama extends StatefulWidget {
 
   /// It is called when the view direction has changed, sending the new longitude and latitude values back.
   final Function(double, double) onChangedCallback;
+
+  /// It is called when the Image has been loaded.
+  final Function() onLoadFinishedCallback;
 
   /// Specify an Image(equirectangular image) widget to the panorama.
   final Image child;
@@ -146,6 +150,7 @@ class _PanoramaState extends State<Panorama> with SingleTickerProviderStateMixin
         final Mesh mesh = generateSphereMesh(radius: _radius, latSegments: widget.latSegments, lonSegments: widget.lonSegments, texture: image);
         scene.world.add(Object(name: 'surface', mesh: mesh, backfaceCulling: false));
         scene.updateTexture();
+        widget.onLoadFinishedCallback();
       });
     }
   }
